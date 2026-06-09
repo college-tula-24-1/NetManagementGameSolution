@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="ManagementGameConsole/ManagementGameConsole.csproj" Id="ea7a9d32-c876-4948-b840-b52c119bd53d" />
+  <Project Path="ManagementGameCore/ManagementGameCore.csproj" />
+  <Project Path="ManagementGameMSTest/ManagementGameMSTest.csproj" Id="f9d3024a-5464-4e48-b611-70737ef2de1f" />
+  <Project Path="ManagementGameNUnit/ManagementGameNUnit.csproj" Id="7fac9695-4831-436d-994a-1c1a3335aa7c" />
+  <Project Path="ManagementGameXUnit/ManagementGameXUnit.csproj" Id="cfcb60aa-1707-4978-a36b-54bf8de0264a" />
+</Solution>
