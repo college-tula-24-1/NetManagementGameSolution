@@ -8,6 +8,12 @@ namespace ManagementGameCore
 {
     public interface IPlayerPlatform
     {
-        AuctionPair ReadMaterialInfo(AuctionPair materialPair);
+        AuctionPair ReadMaterialInfo(string name, AuctionPair materialPair);
+
+        (int simple, int automated) ReadProductionInfo(string name, List<Factory> factories);
+
+        AuctionPair ReadProductInfo(string name, AuctionPair materialPair);
+
+        Money ReadCreaditInfo(Money maxAmount);
     }
 }

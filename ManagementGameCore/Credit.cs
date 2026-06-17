@@ -18,7 +18,7 @@ namespace ManagementGameCore
 
         public bool PeriodDec()
         {
-            return --Period > 0;
+            return --Period == 0;
         }
 
         public Money Percent()

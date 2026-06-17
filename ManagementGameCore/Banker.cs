@@ -23,18 +23,19 @@
         
         public void MonthlyExpenses()
         {
-            Players = Players.Where(player => player.MonthlyExpenses() >= 0)
-                             .ToList();
+            Players.ForEach(player => player.MonthlyExpenses());
+            this.PlayerBankruptCheck();
         }
 
         public void Auction()
         {
             AuctionInfo = Market.Auction(PlayersCount);
-            BankerAuctionNotify?.Invoke(this, new BankerEventArgs(this));
         }
 
         public void MaterialAuction()
         {
+            BankerMaterialAuctionNotify?.Invoke(this, new BankerEventArgs(this));
+
             var materialAuctionPlayers = Players.Select(
                 player =>
                 {
@@ -64,9 +65,85 @@
                     }
                     p.Player.MaterialResponse(new(count, p.MaterialPair.Price));
                 });
+            this.PlayerBankruptCheck();
         }
 
-        public static event BankerEventHandler? BankerAuctionNotify;
+        public void Production()
+        {
+            Players.ForEach(player => player.Production());
+            this.PlayerBankruptCheck();
+        }
+
+        public void ProductAuction()
+        {
+            BankerProductAuctionNotify?.Invoke(this, new BankerEventArgs(this));
+
+            var productAuctionPlayers = Players.Select(
+                player =>
+                {
+                    var pair = player.ProductRequest(AuctionInfo.Materials);
+                    return new
+                    {
+                        Player = player,
+                        ProductPair = pair,
+                    };
+                }).ToList();
+            productAuctionPlayers.Sort(
+                (l, r) => l.ProductPair.Price - r.ProductPair.Price);
+
+            int productCount = AuctionInfo.Products.Count;
+
+            productAuctionPlayers.ForEach(
+                p =>
+                {
+                    int count = 0;
+                    if (productCount > 0)
+                    {
+                        if (productCount >= p.ProductPair.Count)
+                            count = p.ProductPair.Count;
+                        else
+                            count = productCount;
+                        productCount -= count;
+                    }
+                    p.Player.ProductResponse(new(count, p.ProductPair.Price));
+                });
+            this.PlayerBankruptCheck();
+        }
+
+        public void PaymentCreditRate()
+        {
+            Players.ForEach(player => player.PaymentCreditRate());
+            this.PlayerBankruptCheck();
+        }
+
+        public void PaymentCredit()
+        {
+            Players.ForEach(player => player.PaymentCredit());
+            this.PlayerBankruptCheck();
+        }
+
+        public void TakeCreadit()
+        {
+            Players.ForEach(player => player.TakeCredit());
+            this.PlayerBankruptCheck();
+        }
+
+        public void PlayerBankruptCheck()
+        {
+            Players.ForEach(player =>
+            {
+                if (player.Account < 0)
+                    player.Bunkrupt();
+            });
+
+            Players = Players.Where(player => player.Account >= 0)
+                             .ToList();
+        }
+
+
+
+        public static event BankerEventHandler? BankerMaterialAuctionNotify;
+        public static event BankerEventHandler? BankerProductAuctionNotify;
 
     }
 

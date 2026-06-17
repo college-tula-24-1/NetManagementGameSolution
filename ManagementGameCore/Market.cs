@@ -51,5 +51,5 @@ namespace ManagementGameCore
     }
 
     public record struct AuctionPair(int Count, Money Price);
-    public record struct AuctionInfo(AuctionPair Materials, AuctionPair products);
+    public record struct AuctionInfo(AuctionPair Materials, AuctionPair Products);
 }
