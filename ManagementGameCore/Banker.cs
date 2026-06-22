@@ -128,6 +128,12 @@
             this.PlayerBankruptCheck();
         }
 
+        public void FactoriesServices()
+        {
+            Players.ForEach(player => FactoriesServices());
+            this.PlayerBankruptCheck();
+        }
+
         public void PlayerBankruptCheck()
         {
             Players.ForEach(player =>
