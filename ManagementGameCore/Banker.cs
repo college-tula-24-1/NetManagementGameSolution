@@ -3,6 +3,8 @@
     public class Banker
     {
         readonly int maxPlayersCount = 2;
+        int round = 0;
+
         public List<Player> Players { get; private set; } = new();
         public Market Market { get; private set; } = new();
         public AuctionInfo AuctionInfo { get; private set; }
@@ -11,6 +13,9 @@
 
         public int MaxPlayersCount => maxPlayersCount;
         public int PlayersCount => Players.Count;
+        public int Round => round;
+        public int Dealer => round % maxPlayersCount;
+
         public bool AddPlayer(Player player)
         {
             if (Players.Count < maxPlayersCount)
@@ -141,6 +146,19 @@
         }
 
 
+        public void GameRound()
+        {
+            round++;
+            MonthlyExpenses();
+
+            Auction();
+            MaterialAuction();
+            Production();
+            ProductAuction();
+            PaymentCreditRate();
+            PaymentCredit();
+            TakeCreadit();
+        }
 
         public static event BankerEventHandler? BankerMaterialAuctionNotify;
         public static event BankerEventHandler? BankerProductAuctionNotify;

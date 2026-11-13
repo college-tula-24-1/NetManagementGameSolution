@@ -56,11 +56,11 @@ namespace ManagementGameCore
                         FactoryAutomatedNotify?.Invoke(this, new FactoryEventArgs(this));
             }            
         }
+
         public static Factory CreateDefault(Player player)
         {
             return new Factory(player);
         }
-
         public static Factory Create(Player player, bool automated = false)
         {
             return new Factory(player).StartConstruction(automated);
