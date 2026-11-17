@@ -15,5 +15,8 @@ namespace ManagementGameCore
         AuctionPair ReadProductInfo(string name, AuctionPair materialPair);
 
         Money ReadCreaditInfo(Money maxAmount);
+
+        (int simple, int automated, int toAutomated ) ReadFactoryConstructionInfo(Money account);
+        
     }
 }

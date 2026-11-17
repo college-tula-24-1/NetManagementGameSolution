@@ -18,8 +18,6 @@ namespace ManagementGameCore
 
         public static IPlayerPlatform? PlayerPlatform { get; set; }
 
-
-
         public Player(string name = "Computer")
         {
             this.Name = name;
@@ -34,7 +32,7 @@ namespace ManagementGameCore
             };
         }
 
-        public void FactoriesMonthleCheck()
+        public void FactoriesMonthlyCheck()
         {
             foreach(var factory in Factories)
                 factory.MonthlyCheck();
@@ -51,15 +49,14 @@ namespace ManagementGameCore
         
         public List<Factory> FactoriesSimple()
         {
-            return Factories.Where(factory => !factory.Automated)
+            return Factories.Where(factory => factory.Built && !factory.Automated)
                             .ToList();
         }
         public List<Factory> FactoriesAutomated()
         {
-            return Factories.Where(factory => factory.Automated)
+            return Factories.Where(factory => factory.Built && factory.Automated)
                             .ToList();
         }
-
 
         public Money MonthlyExpenses()
         {
@@ -131,7 +128,6 @@ namespace ManagementGameCore
             PlayerPaymentCreditRateNotify?.Invoke(this, new PlayerEventArgs(this));
             return Account;
         }
-
         public Money PaymentCredit()
         {
             Credits.ForEach(credit =>
@@ -145,7 +141,6 @@ namespace ManagementGameCore
             Credits = Credits.Where(credit => credit.Period > 0).ToList();
             return Account;
         }
-
         public Money TakeCredit()
         {
             Money maxAmount = new();
@@ -169,6 +164,23 @@ namespace ManagementGameCore
             }
 
             return Account;
+        }
+
+        public Money FactoriesServices()
+        {
+            FactoriesMonthlyCheck();
+
+            (int simple, int automated, int toAutomated) constructionInfo =
+                PlayerPlatform.ReadFactoryConstructionInfo(this.Account);
+
+            for (int i = 0; i < constructionInfo.simple; i++)
+                Factories.Add(new Factory().StartConstruction());
+
+            for(int i = 0; i < constructionInfo.automated; i++)
+                Factories.Add(new Factory().StartConstruction(true));
+
+            for(int i = 0; i < = constructionInfo.toAutomated; i++)
+                FactoriesSimple()[i].StartAutomated();
         }
 
         public void Bunkrupt()
