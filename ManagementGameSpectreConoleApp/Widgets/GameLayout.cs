@@ -18,15 +18,17 @@ namespace ManagementGameSpectreConoleApp.Widgets
         public BarChart ManufactoriesBarChart { set; get; } = new BarChart();
         public Table FinanceTable { set; get; } = new Table();
 
+        public SelectionPrompt<String> PlayerMenu { set; get; } = new();
+
 
         public GameLayout()
         {
             Layout infoLayout = new("Info");
             Layout playerLayout = new("Player");
 
-            infoLayout.Ratio = 1;
-            ContentLayout.Ratio = 4;
-            playerLayout.Ratio = 2;
+            infoLayout.Ratio = 2;
+            ContentLayout.Ratio = 8;
+            playerLayout.Ratio = 3;
 
             MainLayout.SplitRows(infoLayout, ContentLayout, playerLayout);
 
@@ -36,9 +38,9 @@ namespace ManagementGameSpectreConoleApp.Widgets
                 CalendarLayoutInit());
 
             playerLayout.SplitColumns(
-                ManufactoriesLayoutInit(),
-                new Layout("").Update(new Panel("").NoBorder()),
-                FinanceLayoutInit());
+                ManufactoriesLayoutInit().Ratio(4),
+                new Layout("").Ratio(3).Update(new Panel("").NoBorder()),
+                FinanceLayoutInit().Ratio(4));
         }
 
 
