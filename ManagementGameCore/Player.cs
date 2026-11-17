@@ -166,22 +166,22 @@ namespace ManagementGameCore
             return Account;
         }
 
-        public Money FactoriesServices()
-        {
-            FactoriesMonthlyCheck();
+        //public Money FactoriesServices()
+        //{
+        //    FactoriesMonthlyCheck();
 
-            (int simple, int automated, int toAutomated) constructionInfo =
-                PlayerPlatform.ReadFactoryConstructionInfo(this.Account);
+        //    (int simple, int automated, int toAutomated) constructionInfo =
+        //        PlayerPlatform.ReadFactoryConstructionInfo(this.Account);
 
-            for (int i = 0; i < constructionInfo.simple; i++)
-                Factories.Add(new Factory().StartConstruction());
+        //    for (int i = 0; i < constructionInfo.simple; i++)
+        //        Factories.Add(new Factory().StartConstruction());
 
-            for(int i = 0; i < constructionInfo.automated; i++)
-                Factories.Add(new Factory().StartConstruction(true));
+        //    for(int i = 0; i < constructionInfo.automated; i++)
+        //        Factories.Add(new Factory().StartConstruction(true));
 
-            for(int i = 0; i < = constructionInfo.toAutomated; i++)
-                FactoriesSimple()[i].StartAutomated();
-        }
+        //    for(int i = 0; i <= constructionInfo.toAutomated; i++)
+        //        FactoriesSimple()[i].StartAutomated();
+        //}
 
         public void Bunkrupt()
         {
