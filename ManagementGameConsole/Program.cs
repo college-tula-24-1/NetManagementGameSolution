@@ -67,6 +67,11 @@ class ConsolePlatform : IPlayerPlatform
         throw new NotImplementedException();
     }
 
+    public (int simple, int automated, int toAutomated) ReadFactoryConstructionInfo(Money account)
+    {
+        throw new NotImplementedException();
+    }
+
     public AuctionPair ReadMaterialInfo(string name, AuctionPair materialPair)
     {
         Console.WriteLine($"Player {name} Material Auction");

@@ -24,7 +24,12 @@ namespace ManagementGameCore
             get => automated && FreezingPeriod == 0;
         }
         public bool Built { private set; get; } = true;
+        public bool IsRunning
+        {
+            get => Built && FreezingPeriod == 0;
+        }
         public int FreezingPeriod { private set; get; } = 0;
+
         public Factory StartAutomated()
         {
             if(Built && !Automated)

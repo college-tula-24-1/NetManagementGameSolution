@@ -8,12 +8,19 @@ namespace ManagementGameCore
 {
     public class Player
     {
+        public Guid Id { get; private set; } = Guid.NewGuid();
+
+        private AuctionPair auctionPair;
         public string Name { get; private set; } = null!;
         public List<Factory> Factories { private set; get; } = null!;
         public List<Credit> Credits { private set; get; } = new();
         public Money Account { get; private set; }
         public int Materials { get; private set; }
         public int Products { get; private set; }
+        public int FactoriesNotRunning
+        {
+            get => Factories.Count(factory => !factory.IsRunning);
+        }
 
 
         public static IPlayerPlatform? PlayerPlatform { get; set; }
@@ -58,6 +65,8 @@ namespace ManagementGameCore
                             .ToList();
         }
 
+        
+
         public Money MonthlyExpenses()
         {
             Money expenses = new Money();
@@ -71,9 +80,14 @@ namespace ManagementGameCore
 
             return Account;
         }
-        public AuctionPair MaterialRequest(AuctionPair materialPair)
+
+        public void ReadMaterialInfo(int count, int price)
         {
-            return PlayerPlatform.ReadMaterialInfo(Name, materialPair);
+            auctionPair = new AuctionPair(count, new Money(price, 0));
+        }
+        public AuctionPair MaterialRequest()
+        {
+            return auctionPair;
         }
         public Money MaterialResponse(AuctionPair materialPair)
         {

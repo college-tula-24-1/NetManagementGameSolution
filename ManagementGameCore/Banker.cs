@@ -7,7 +7,7 @@
 
         public List<Player> Players { get; private set; } = new();
         public Market Market { get; private set; } = new();
-        public AuctionInfo AuctionInfo { get; private set; }
+        public AuctionInfo AuctionInfo { get; private set; } = new();
 
         public Banker() { }
 
@@ -44,7 +44,7 @@
             var materialAuctionPlayers = Players.Select(
                 player =>
                 {
-                    var pair = player.MaterialRequest(AuctionInfo.Materials);
+                    var pair = player.MaterialRequest();
                     return new
                     {
                         Player = player,

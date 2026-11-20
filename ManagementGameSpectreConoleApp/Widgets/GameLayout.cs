@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using ManagementGameCore;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,125 +8,71 @@ namespace ManagementGameSpectreConoleApp.Widgets
 {
     public class GameLayout
     {
+        PlayerWidget playerWidget = new(new ManagementGameCore.Player());
+        BankerWidget bankerWidget = new(new ManagementGameCore.Banker());
+
+        List<Player> opponents = new()
+        {
+            new("Bobby"),
+            new("Sammy"),
+            new("Mikky"),
+            new("Bobby"),
+            new("Sammy"),
+            new("Mikky"),
+        };
+
+        List<OpponentWidget> opponentsWidgets = new();
         public Layout MainLayout { get; set; } = new Layout("Main");
 
-        public Layout ContentLayout { get; set; } = new Layout("Content");
-        //public Layout PlayerLayout { get; set; } = new Layout("Player");
-
-        public Table BankTable { set; get; } = new Table();
-        public Table CalendarTable { set; get; } = new Table();
-
-        public BarChart ManufactoriesBarChart { set; get; } = new BarChart();
-        public Table FinanceTable { set; get; } = new Table();
-
-        public SelectionPrompt<String> PlayerMenu { set; get; } = new();
+        
 
 
         public GameLayout()
         {
             Layout infoLayout = new("Info");
             Layout playerLayout = new("Player");
+            Layout opponentsLayout = new Layout("Opponents");
 
-            infoLayout.Ratio = 2;
-            ContentLayout.Ratio = 8;
-            playerLayout.Ratio = 3;
+            infoLayout.Ratio = 3;
+            opponentsLayout.Ratio = 9;
+            playerLayout.Ratio = 5;
 
-            MainLayout.SplitRows(infoLayout, ContentLayout, playerLayout);
+            MainLayout.SplitRows(infoLayout, opponentsLayout, playerLayout);
 
             infoLayout.SplitColumns(
-                BankLayoutInit(),
+                new Layout(bankerWidget.AuctionInfoWidget),
                 new Layout("").Update(new Panel("").NoBorder()),
-                CalendarLayoutInit());
+                new Layout(bankerWidget.CalendarWidget));
 
             playerLayout.SplitColumns(
-                ManufactoriesLayoutInit().Ratio(4),
+                new Layout(playerWidget.ManufactoriesWidget).Ratio(4),
                 new Layout("").Ratio(3).Update(new Panel("").NoBorder()),
-                FinanceLayoutInit().Ratio(4));
+                new Layout(playerWidget.FinanceWidget).Ratio(4));
+
+            foreach (Player player in opponents)
+                opponentsWidgets.Add(new(player));
+
+            Grid opponentsGrid = new Grid().Expand().AddColumns(3);
+
+            List<Panel> opponentsRow = new();
+            int count = 0;
+            foreach(var w in opponentsWidgets)
+            {
+                opponentsRow.Add(w.OpponentInfo);
+                count++;
+                if(count >= 3)
+                {
+                    opponentsGrid.AddRow(opponentsRow.ToArray());
+                    count = 0;
+                    opponentsRow.Clear();
+                }
+            }
+            opponentsGrid.AddRow(opponentsRow.ToArray());
+
+            opponentsLayout.Update(opponentsGrid);
+
         }
 
 
-        private Layout BankLayoutInit()
-        {
-            BankTable.NoBorder()
-                     .HideHeaders()
-                     .AddColumn("")
-                     .AddColumn("");
-            BankTable.AddRow("Material Count", "0")
-                     .AddRow("Material Min Price", "0")
-                     .AddEmptyRow()
-                     .AddRow("Product Count", "0")
-                     .AddRow("Product Max Price", "0");
-
-            Panel bankPanel = new Panel(BankTable)
-                              .Expand()
-                              .Header("Bank Info")
-                              .DoubleBorder();
-            return new Layout(bankPanel);
-        }
-
-        private Layout CalendarLayoutInit()
-        {
-            CalendarTable.NoBorder()
-                         .HideHeaders()
-                         .AddColumns("", "");
-            CalendarTable.AddEmptyRow()
-                         .AddRow("Year", "1")
-                         .AddEmptyRow()
-                         .AddRow("Month", "1");
-            Panel calendarPanel = new Panel(CalendarTable)
-                                     .Expand()
-                                     .Header("Calendar")
-                                     .DoubleBorder();
-            return new Layout(calendarPanel);
-        }
-
-        private Layout ManufactoriesLayoutInit()
-        {
-            //ManufactoriesTable.NoBorder()
-            //                  .HideHeaders()
-            //                  .AddColumns("", "");
-            //ManufactoriesTable.AddRow("Factories Ordinary", "3")
-            //                  .AddRow("Factories Automated", "2")
-            //                  .AddRow("Factories Under Construction", "1")
-            //                  .AddEmptyRow()
-            //                  .AddRow("Materials", "4")
-            //                  .AddRow("Products", "2");
-
-            ManufactoriesBarChart
-                                 .Width(60)
-                                 .AddItem("Factories Ordinary", 4, Color.Green)
-                                 .AddItem("Factories Automated", 2, Color.Blue)
-                                 .AddItem("Factories Under Construction", 3, Color.Red)
-                                 .AddItem("", 0, Color.Black)
-                                 .AddItem("Materials", 12, Color.White)
-                                 .AddItem("Products", 3, Color.Yellow);
-
-
-            Panel manufactoriesPanel = new Panel(ManufactoriesBarChart)
-                                            .Expand()
-                                            .Header("Manufactories Info")
-                                            .DoubleBorder();
-
-            return new Layout(manufactoriesPanel);
-        }
-
-        private Layout FinanceLayoutInit()
-        {
-            FinanceTable.NoBorder()
-                        .HideHeaders()
-                        .AddColumns("", "");
-            FinanceTable.AddRow("Account", "12000")
-                        .AddEmptyRow()
-                        .AddRow("Credits", "5000")
-                        .AddEmptyRow()
-                        .AddRow("Crredit Percent per Month", "120");
-
-            Panel financePanel = new Panel(FinanceTable)
-                                            .Expand()
-                                            .Header("Finance Info")
-                                            .DoubleBorder();
-            
-            return new Layout(financePanel);
-        }
     }
 }

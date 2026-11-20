@@ -50,6 +50,27 @@ namespace ManagementGameCore
         }
     }
 
-    public record struct AuctionPair(int Count, Money Price);
-    public record struct AuctionInfo(AuctionPair Materials, AuctionPair Products);
+    public record AuctionPair  //(int Count, Money Price);
+    {
+        public int Count { get; set; }
+        public Money Price { get; set; } = new();
+        public AuctionPair() { }
+        public AuctionPair(int count, Money price)
+        {
+            Count = count;
+            Price = price;
+        }
+    }
+    public record AuctionInfo
+    {
+        public AuctionPair Materials { get; set; } = new();
+        public AuctionPair Products { get; set; } = new();
+
+        public AuctionInfo() { }
+        public AuctionInfo(AuctionPair materials, AuctionPair products)
+        {
+            this.Materials = materials;
+            this.Products = products;
+        }
+    }
 }
